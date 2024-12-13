@@ -98,11 +98,8 @@ public class JellyDB : DbContext
             albumEntities.Add(albumEntity);
 
             // Add songs in the album
-            string albumFolder = Path.Combine(albumsDir, albumPair.Value.AlbumName!);
             foreach (var songName in albumPair.Value.SongNames ?? new List<string>())
             {
-                string mp3FilePath = Path.Combine(albumFolder, $"{songName}.mp3");
-
                 var songEntity = new SongEntity
                 {
                     SongID = songID,
@@ -111,7 +108,7 @@ public class JellyDB : DbContext
                     AlbumName = albumPair.Value.AlbumName,
                     ArtistID = artistIdForAlbum ?? 0,
                     ArtistName = albumPair.Value.ArtistName,
-                    MP3FileName = mp3FilePath,
+                    MP3FileName = "albums/" + albumPair.Value.AlbumName + "/" + songName + ".mp3",
                     CoverFileName = "albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg",
                 };
 
@@ -128,6 +125,7 @@ public class JellyDB : DbContext
         {
             var artist = artistEntities.FirstOrDefault(a => a.ArtistID == album.ArtistID);
             artist?.AlbumIDs?.Add(album.AlbumID);
+            artist?.AlbumNames?.Add(album.AlbumName!);
         }
         
         Artists?.AddRange(artistEntities);
