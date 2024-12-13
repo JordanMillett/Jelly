@@ -19,8 +19,10 @@ public class JellyDB : DbContext
         }
     }
     
-    public void LoadSongMetadataFromJson()
+    public void ConstructDBFromData()
     {
+        return;
+        
         Dictionary<string, SongMetadata> UniqueSongs = new Dictionary<string, SongMetadata>();
         Dictionary<string, AlbumMetadata> UniqueAlbums = new Dictionary<string, AlbumMetadata>();
         Dictionary<string, ArtistMetadata> UniqueArtists = new Dictionary<string, ArtistMetadata>();
@@ -40,7 +42,10 @@ public class JellyDB : DbContext
             string jsonContent = File.ReadAllText(filePath);
             SongMetadata Data = JsonSerializer.Deserialize<SongMetadata>(jsonContent)!;
 
-            
+            if(Data != null)
+            {
+                
+            }
         }
         
         /*
