@@ -90,7 +90,7 @@ public class JellyDB : DbContext
                 AlbumName = albumPair.Value.AlbumName,
                 ArtistID = artistIdForAlbum ?? 0,
                 ArtistName = albumPair.Value.ArtistName,
-                CoverFileName = "albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg",
+                CoverFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
                 SongIDs = new List<int>(),
                 SongNames = albumPair.Value.SongNames
             };
@@ -108,8 +108,8 @@ public class JellyDB : DbContext
                     AlbumName = albumPair.Value.AlbumName,
                     ArtistID = artistIdForAlbum ?? 0,
                     ArtistName = albumPair.Value.ArtistName,
-                    MP3FileName = "albums/" + albumPair.Value.AlbumName + "/" + songName + ".mp3",
-                    CoverFileName = "albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg",
+                    MP3FileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + songName + ".mp3"),
+                    CoverFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
                 };
 
                 songEntities.Add(songEntity);

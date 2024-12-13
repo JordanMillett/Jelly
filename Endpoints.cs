@@ -13,7 +13,7 @@ namespace Jelly
         
         public override void Configure()
         {
-            Post("/api/getsong/{ID}");
+            Get("/api/getsong/{ID}");
             AllowAnonymous();
         }
 
@@ -28,6 +28,35 @@ namespace Jelly
             }
 
             await SendAsync(Song);
+        }
+    }
+    
+    public class GetAlbum : Endpoint<IDRequest, AlbumEntity>
+    {
+        private readonly JellyDB Context;
+        
+        public GetAlbum(JellyDB context)
+        {
+            Context = context;
+        }
+        
+        public override void Configure()
+        {
+            Get("/api/getalbum/{ID}");
+            AllowAnonymous();
+        }
+
+        public override async Task HandleAsync(IDRequest request, CancellationToken token)
+        {  
+            AlbumEntity? Album = await Context.Albums!.FirstOrDefaultAsync(s => s.AlbumID == request.ID);
+
+            if (Album == null)
+            {
+                await SendNotFoundAsync();
+                return;
+            }
+
+            await SendAsync(Album);
         }
     }
 
@@ -48,9 +77,8 @@ namespace Jelly
 
         public override async Task HandleAsync(ResourceRequest request, CancellationToken token)
         {
-            string imagesFolder = Path.Combine(Context.WebRootPath, "imgs");
-
-            string filePath = Path.Combine(imagesFolder, request.URL!);
+            string decodedUrl = Uri.UnescapeDataString(request.URL!);
+            string filePath = Path.Combine(Context.WebRootPath, decodedUrl);
 
             if (!File.Exists(filePath))
             {
