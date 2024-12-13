@@ -8,6 +8,15 @@ builder.Services.AddDbContext<JellyDB>(options => options.UseSqlite("Data Source
 builder.Services.AddFastEndpoints();
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<JellyDB>();
+    dbContext.ConstructDBFromData();
+}
+
+
 app.UseFastEndpoints();
 app.Run();
 

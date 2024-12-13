@@ -14,9 +14,9 @@ namespace Jelly
         public int ArtistID { get; set; }
         public string? ArtistName { get; set; }
         
-        //URLS
-        public string? MP3URL { get; set; }
-        public string? CoverURL { get; set; }
+        //FileNames
+        public string? MP3FileName { get; set; }
+        public string? CoverFileName { get; set; }
     }
     
     public class AlbumEntity
@@ -31,8 +31,8 @@ namespace Jelly
         public List<int>? SongIDs { get; set; }
         public List<string>? SongNames { get; set; }    
         
-        //URLS
-        public string? CoverURL { get; set; }
+        //FileNames
+        public string? CoverFileName { get; set; }
     }
     
     public class ArtistEntity
@@ -44,7 +44,7 @@ namespace Jelly
         public List<int>? AlbumIDs { get; set; }
         public List<string>? AlbumNames { get; set; } 
         
-        //URLS
-        public string? PictureURL { get; set; }
+        //FileNames
+        public string? PictureFileName { get; set; }
     }
 }

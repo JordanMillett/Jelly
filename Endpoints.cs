@@ -13,7 +13,7 @@ namespace Jelly
         
         public override void Configure()
         {
-            Post("/api/getsong");
+            Post("/api/getsong/{ID}");
             AllowAnonymous();
         }
 

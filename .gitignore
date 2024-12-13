@@ -486,4 +486,9 @@ $RECYCLE.BIN/
 Migrations
 Data
 
-wwwroot/imgs
+wwwroot/artists
+wwwroot/albums
+
+Jelly.db
+Jelly.db-shm
+Jelly.db-wal
