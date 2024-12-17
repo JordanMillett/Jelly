@@ -9,4 +9,11 @@ namespace Jelly
     {
         public string? URL { get; set; }
     }
+    
+    public class PartialResourceRequest
+    {
+        public string? URL { get; set; }
+        public long Start { get; set; }
+        public long End { get; set; }
+    }
 }
