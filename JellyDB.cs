@@ -81,7 +81,7 @@ public class JellyDB : DbContext
                 ArtistID = artistID,
                 ArtistName = artistPair.Value.ArtistName,
                 AlbumNames = artistPair.Value.AlbumNames,
-                PictureFileName = "artists/" + artistPair.Value.ArtistName + ".jpg",
+                PictureFileName =  Uri.EscapeDataString("artists/" + artistPair.Value.ArtistName + ".jpg"),
                 AlbumIDs = new List<int>()
             });
 
