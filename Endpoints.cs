@@ -13,7 +13,7 @@ namespace Jelly
         
         public override void Configure()
         {
-            Get("/api/getsong/{ID}");
+            Get("/api/get/song/{ID}");
             AllowAnonymous();
         }
 
@@ -42,7 +42,7 @@ namespace Jelly
         
         public override void Configure()
         {
-            Get("/api/getalbum/{ID}");
+            Get("/api/get/album/{ID}");
             AllowAnonymous();
         }
 
@@ -59,6 +59,35 @@ namespace Jelly
             await SendAsync(Album);
         }
     }
+    
+    public class GetArtist : Endpoint<IDRequest, ArtistEntity>
+    {
+        private readonly JellyDB Context;
+        
+        public GetArtist(JellyDB context)
+        {
+            Context = context;
+        }
+        
+        public override void Configure()
+        {
+            Get("/api/get/artist/{ID}");
+            AllowAnonymous();
+        }
+
+        public override async Task HandleAsync(IDRequest request, CancellationToken token)
+        {  
+            ArtistEntity? Artist = await Context.Artists!.FirstOrDefaultAsync(s => s.ArtistID == request.ID);
+
+            if (Artist == null)
+            {
+                await SendNotFoundAsync();
+                return;
+            }
+
+            await SendAsync(Artist);
+        }
+    }
 
     public class GetImage : Endpoint<ResourceRequest>
     {
@@ -71,7 +100,7 @@ namespace Jelly
 
         public override void Configure()
         {
-            Get("/api/getimage/{URL}");
+            Get("/api/get/image/{URL}");
             AllowAnonymous();
         }
 
@@ -106,7 +135,7 @@ namespace Jelly
 
         public override void Configure()
         {
-            Get("/api/getsize/{URL}");
+            Get("/api/get/size/{URL}");
             AllowAnonymous();
         }
 
@@ -139,7 +168,7 @@ namespace Jelly
 
         public override void Configure()
         {
-            Get("/api/getaudiochunk/");
+            Get("/api/get/audio/");
             AllowAnonymous();
         }
 
@@ -158,7 +187,7 @@ namespace Jelly
 
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             stream.Seek(request.Start, SeekOrigin.Begin);
-
+    
             await stream.CopyToAsync(HttpContext.Response.Body, (int)chunkSize, token);
         }
     }
