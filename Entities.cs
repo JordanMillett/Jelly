@@ -16,7 +16,7 @@ namespace Jelly
         
         //FileNames
         public string? MP3FileName { get; set; }
-        public string? CoverFileName { get; set; }
+        public string? PictureFileName { get; set; }
     }
     
     public class AlbumEntity
@@ -32,7 +32,7 @@ namespace Jelly
         public List<string>? SongNames { get; set; }    
         
         //FileNames
-        public string? CoverFileName { get; set; }
+        public string? PictureFileName { get; set; }
     }
     
     public class ArtistEntity
@@ -42,7 +42,8 @@ namespace Jelly
         public string? ArtistName { get; set; }
 
         public List<int>? AlbumIDs { get; set; }
-        public List<string>? AlbumNames { get; set; } 
+        public List<string>? AlbumNames { get; set; }
+        public List<string>? AlbumPictureFileNames { get; set; } 
         
         //FileNames
         public string? PictureFileName { get; set; }

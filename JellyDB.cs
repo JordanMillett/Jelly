@@ -82,7 +82,8 @@ public class JellyDB : DbContext
                 ArtistName = artistPair.Value.ArtistName,
                 AlbumNames = artistPair.Value.AlbumNames,
                 PictureFileName =  Uri.EscapeDataString("artists/" + artistPair.Value.ArtistName + ".jpg"),
-                AlbumIDs = new List<int>()
+                AlbumIDs = new List<int>(),
+                AlbumPictureFileNames = new List<string>()
             });
 
             artistID++;
@@ -101,7 +102,7 @@ public class JellyDB : DbContext
                 AlbumName = albumPair.Value.AlbumName,
                 ArtistID = artistIdForAlbum ?? 0,
                 ArtistName = albumPair.Value.ArtistName,
-                CoverFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
+                PictureFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
                 SongIDs = new List<int>(),
                 SongNames = albumPair.Value.SongNames
             };
@@ -120,7 +121,7 @@ public class JellyDB : DbContext
                     ArtistID = artistIdForAlbum ?? 0,
                     ArtistName = albumPair.Value.ArtistName,
                     MP3FileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + songName + ".mp3"),
-                    CoverFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
+                    PictureFileName = Uri.EscapeDataString("albums/" + albumPair.Value.AlbumName + "/" + albumPair.Value.AlbumName + ".jpg"),
                 };
 
                 songEntities.Add(songEntity);
@@ -137,6 +138,7 @@ public class JellyDB : DbContext
             var artist = artistEntities.FirstOrDefault(a => a.ArtistID == album.ArtistID);
             artist?.AlbumIDs?.Add(album.AlbumID);
             artist?.AlbumNames?.Add(album.AlbumName!);
+            artist?.AlbumPictureFileNames?.Add(album.PictureFileName!);
         }
         
         Artists?.AddRange(artistEntities);

@@ -35,9 +35,8 @@ namespace Jelly
 
             await SendAsync(result);
         }
-}
+    }
 
-    
     public class GetSong : Endpoint<IDRequest, SongEntity>
     {
         private readonly JellyDB Context;
