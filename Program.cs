@@ -30,5 +30,6 @@ using (var scope = app.Services.CreateScope())
 app.UseFastEndpoints();
 app.Run();
 
+//rm Migrations
 //dotnet ef migrations add InitialCreate
 //dotnet ef database update

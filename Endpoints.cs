@@ -2,6 +2,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jelly
 {
+    public class GetSequence : EndpointWithoutRequest<Sequence>
+    {
+        private readonly JellyDB Context;
+
+        public GetSequence(JellyDB context)
+        {
+            Context = context;
+        }
+
+        public override void Configure()
+        {
+            Get("/api/get/sequence");
+            AllowAnonymous();
+        }
+
+        public override async Task HandleAsync(CancellationToken token)
+        {
+            var sql = @"
+                SELECT 
+                    COALESCE((SELECT seq FROM sqlite_sequence WHERE name = 'Songs'), 0) AS Songs,
+                    COALESCE((SELECT seq FROM sqlite_sequence WHERE name = 'Albums'), 0) AS Albums,
+                    COALESCE((SELECT seq FROM sqlite_sequence WHERE name = 'Artists'), 0) AS Artists";
+
+            Sequence result = await Context.Sequence.FromSqlRaw(sql).FirstOrDefaultAsync(token) ?? null!;
+
+            if (result == null)
+            {
+                await SendNotFoundAsync();
+                return;
+            }
+
+            await SendAsync(result);
+        }
+}
+
+    
     public class GetSong : Endpoint<IDRequest, SongEntity>
     {
         private readonly JellyDB Context;

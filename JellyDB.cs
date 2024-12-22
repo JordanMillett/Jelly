@@ -10,6 +10,7 @@ public class JellyDB : DbContext
     public DbSet<SongEntity>? Songs { get; set; }
     public DbSet<AlbumEntity>? Albums { get; set; }
     public DbSet<ArtistEntity>? Artists { get; set; }
+    public DbSet<Sequence> Sequence { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -17,6 +18,16 @@ public class JellyDB : DbContext
         {
             optionsBuilder.UseSqlite("Data Source=Jelly.db");
         }
+    }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Sequence>(entity =>
+        {
+            entity.HasNoKey();
+        });
     }
     
     public void ConstructDBFromData()
