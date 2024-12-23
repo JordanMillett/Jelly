@@ -44,11 +44,17 @@ public class JellyDB : DbContext
         foreach (string Current in foundFiles)
         {
             string fileName = Path.GetFileNameWithoutExtension(Current);
+            string metadataFilePath = Path.Combine(artistsDir, $"{fileName}.json");
+
+            string jsonContent = File.ReadAllText(metadataFilePath);
+            ArtistMetadata artistMetadata = JsonSerializer.Deserialize<ArtistMetadata>(jsonContent)!;
 
             UniqueArtists[fileName] = new ArtistMetadata
             {
                 ArtistName = fileName,
-                AlbumNames = new List<string>()
+                AlbumNames = new List<string>(),
+                Tagline = artistMetadata.Tagline,
+                Description = artistMetadata.Description
             };
         }
         
@@ -83,7 +89,9 @@ public class JellyDB : DbContext
                 AlbumNames = artistPair.Value.AlbumNames,
                 PictureFileName =  Uri.EscapeDataString("artists/" + artistPair.Value.ArtistName + ".jpg"),
                 AlbumIDs = new List<int>(),
-                AlbumPictureFileNames = new List<string>()
+                AlbumPictureFileNames = new List<string>(),
+                Tagline = artistPair.Value.Tagline,
+                Description = artistPair.Value.Description,
             });
 
             artistID++;

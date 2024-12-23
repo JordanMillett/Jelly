@@ -17,6 +17,8 @@ namespace Jelly
         //FileNames
         public string? MP3FileName { get; set; }
         public string? PictureFileName { get; set; }
+        
+        //Info
     }
     
     public class AlbumEntity
@@ -33,6 +35,8 @@ namespace Jelly
         
         //FileNames
         public string? PictureFileName { get; set; }
+        
+        //Info
     }
     
     public class ArtistEntity
@@ -47,5 +51,9 @@ namespace Jelly
         
         //FileNames
         public string? PictureFileName { get; set; }
+        
+        //Info
+        public string? Tagline { get; set; } 
+        public string? Description { get; set; } 
     }
 }
