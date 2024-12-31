@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using FastEndpoints;
 using FastEndpoints.Security;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Jelly
 {
@@ -252,6 +256,91 @@ namespace Jelly
             stream.Seek(request.Start, SeekOrigin.Begin);
     
             await stream.CopyToAsync(HttpContext.Response.Body, (int)chunkSize, token);
+        }
+    }
+
+    public class UpdateServer : Endpoint<UpdateServerRequest>
+    {
+        public override void Configure()
+        {
+            Post("/api/update");
+            AllowAnonymous();
+        }
+
+        public override async Task HandleAsync(UpdateServerRequest request, CancellationToken token)
+        {
+            var context = HttpContext;
+
+            string signature = context.Request.Headers["X-Hub-Signature-256"].ToString();
+
+            if (string.IsNullOrEmpty(signature))
+            {
+                await SendErrorsAsync(400); // Bad Request
+                return;
+            }
+
+            // Extract the GitHub signature
+            string githubSignature = signature.StartsWith("sha256=") ? signature.Substring(7) : string.Empty;
+            if (string.IsNullOrEmpty(githubSignature))
+            {
+                await SendErrorsAsync(400); // Bad Request
+                return;
+            }
+
+            string payload;
+            using (var reader = new StreamReader(context.Request.Body))
+            {
+                payload = await reader.ReadToEndAsync();
+            }
+
+            // Validate the payload using HMAC
+            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(Config["SecretConfig:Key"]!)))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(payload));
+                var computedSignature = BitConverter.ToString(computedHash).Replace("-", "").ToLower();
+
+                if (!computedSignature.Equals(githubSignature, StringComparison.OrdinalIgnoreCase))
+                {
+                    await SendErrorsAsync(401); // Unauthorized
+                    return;
+                }
+            }
+
+            try
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    var process = new ProcessStartInfo("update-server.sh")
+                    {
+                        UseShellExecute = true,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false
+                    };
+                    Process.Start(process);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    var process = new ProcessStartInfo("cmd.exe", "/c update-server.bat")
+                    {
+                        UseShellExecute = true,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false
+                    };
+                    Process.Start(process);
+                }
+                else
+                {
+                    await SendErrorsAsync(500); // Internal Server Error
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                await SendErrorsAsync(500); // Internal Server Error
+                return;
+            }
+
+            await SendOkAsync(); // OK
         }
     }
 }
