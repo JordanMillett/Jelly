@@ -18,6 +18,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<JellyDB>(options => options.UseSqlite("Data Source=Jelly.db"));
 
 string SigningKey = builder.Configuration["SecretConfig:Key"]!;
+
+builder.Services.Configure<JwtCreationOptions>(s => s.SigningKey = SigningKey); 
 builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = SigningKey)
    .AddAuthorization()
    .AddFastEndpoints();

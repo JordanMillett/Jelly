@@ -45,7 +45,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/sequence");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(CancellationToken token)
@@ -80,7 +79,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/song/{ID}");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(IDRequest request, CancellationToken token)
@@ -109,7 +107,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/album/{ID}");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(IDRequest request, CancellationToken token)
@@ -138,7 +135,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/artist/{ID}");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(IDRequest request, CancellationToken token)
@@ -167,7 +163,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/image/{URL}");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(ResourceRequest request, CancellationToken token)
@@ -202,7 +197,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/size/{URL}");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(ResourceRequest request, CancellationToken token)
@@ -235,7 +229,6 @@ namespace Jelly
         public override void Configure()
         {
             Get("/api/get/audio/");
-            AllowAnonymous();
         }
 
         public override async Task HandleAsync(PartialResourceRequest request, CancellationToken token)
