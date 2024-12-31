@@ -10,6 +10,10 @@ namespace Jelly
         {
             Post("/api/auth/login");
             AllowAnonymous();
+            Throttle(
+                hitLimit: 10,
+                durationSeconds: 10
+            );
         }
 
         public override async Task HandleAsync(LoginRequest request, CancellationToken token)
