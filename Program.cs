@@ -1,8 +1,11 @@
-global using FastEndpoints;
+using FastEndpoints;
+using FastEndpoints.Security;
+using Jelly;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder();
 
+builder.Services.Configure<SecretConfig>(builder.Configuration.GetSection("SecretConfig"));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
@@ -12,10 +15,12 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();                   // Allow any HTTP method (GET, POST, etc.)
     });
 });
-
 builder.Services.AddDbContext<JellyDB>(options => options.UseSqlite("Data Source=Jelly.db"));
 
-builder.Services.AddFastEndpoints();
+string SigningKey = builder.Configuration["SecretConfig:Key"]!;
+builder.Services.AddAuthenticationJwtBearer(s => s.SigningKey = SigningKey)
+   .AddAuthorization()
+   .AddFastEndpoints();
 
 var app = builder.Build();
 
@@ -27,7 +32,10 @@ using (var scope = app.Services.CreateScope())
     dbContext.ConstructDBFromData();
 }
 
-app.UseFastEndpoints();
+app.UseAuthentication()
+   .UseAuthorization()
+   .UseFastEndpoints();
+
 app.Run();
 
 //rm Migrations

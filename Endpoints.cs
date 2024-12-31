@@ -1,7 +1,38 @@
 using Microsoft.EntityFrameworkCore;
+using FastEndpoints;
+using FastEndpoints.Security;
 
 namespace Jelly
 {
+    public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
+    {
+        public override void Configure()
+        {
+            Post("/api/auth/login");
+            AllowAnonymous();
+        }
+
+        public override async Task HandleAsync(LoginRequest request, CancellationToken token)
+        {
+            if (request.Username != Config["SecretConfig:Username"] || request.Password != Config["SecretConfig:Password"])
+            {
+                ThrowError("Invalid username or password");
+                return;
+            }
+            
+            string auth = JwtBearer.CreateToken
+            (
+                o =>
+                {
+                    o.ExpireAt = DateTime.UtcNow.AddDays(1);
+                    o.User.Claims.Add(("UserName", request.Username!));
+                }
+            );
+
+            await SendAsync(new LoginResponse { AuthToken = auth });
+        }
+    }
+    
     public class GetSequence : EndpointWithoutRequest<Sequence>
     {
         private readonly JellyDB Context;

@@ -492,3 +492,5 @@ wwwroot/albums
 Jelly.db
 Jelly.db-shm
 Jelly.db-wal
+Jelly.sln
+appsettings.json

@@ -16,4 +16,10 @@ namespace Jelly
         public long Start { get; set; }
         public long End { get; set; }
     }
+    
+    public class LoginRequest
+    {
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+    }
 }
