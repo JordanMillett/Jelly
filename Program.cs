@@ -31,6 +31,7 @@ app.UseCors("AllowLocalhost");
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<JellyDB>();
+    dbContext.Database.EnsureCreated();
     dbContext.ConstructDBFromData();
 }
 
