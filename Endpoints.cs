@@ -266,7 +266,7 @@ namespace Jelly
         }
     }
 
-    public class UpdateServer : Endpoint<UpdateServerRequest>
+    public class UpdateServer : EndpointWithoutRequest 
     {
         public override void Configure()
         {
@@ -274,7 +274,7 @@ namespace Jelly
             AllowAnonymous();
         }
 
-        public override async Task HandleAsync(UpdateServerRequest request, CancellationToken token)
+        public override async Task HandleAsync(CancellationToken token)
         {
             var context = HttpContext;
 
