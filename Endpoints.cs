@@ -266,7 +266,7 @@ namespace Jelly
         }
     }
 
-    public class UpdateServer : EndpointWithoutRequest 
+    public class UpdateServer : EndpointWithoutRequest
     {
         public override void Configure()
         {
@@ -341,7 +341,7 @@ namespace Jelly
                     return;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 await SendErrorsAsync(500); // Internal Server Error
                 return;
