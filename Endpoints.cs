@@ -25,6 +25,7 @@ namespace Jelly
             if (request.Username != Config["SecretConfig:Username"] || request.Password != Config["SecretConfig:Password"])
             {
                 ThrowError("Invalid username or password");
+                LogService.AddLog("User Logged In");
                 return;
             }
             
@@ -36,7 +37,8 @@ namespace Jelly
                     o.User.Claims.Add(("UserName", request.Username!));
                 }
             );
-
+            
+            LogService.AddLog("User Logged In");
             await SendAsync(new LoginResponse { AuthToken = auth });
         }
     }
@@ -70,7 +72,8 @@ namespace Jelly
                 await SendNotFoundAsync();
                 return;
             }
-
+            
+            LogService.AddLog("Sequence Retrieved");
             await SendAsync(result);
         }
     }
@@ -92,13 +95,14 @@ namespace Jelly
         public override async Task HandleAsync(IDRequest request, CancellationToken token)
         {  
             SongEntity? Song = await Context.Songs!.FirstOrDefaultAsync(s => s.SongID == request.ID);
-
+            
             if (Song == null)
             {
                 await SendNotFoundAsync();
                 return;
             }
-
+            
+            LogService.AddLog($"Song Entity { Song.SongName } Retrieved");
             await SendAsync(Song);
         }
     }
@@ -126,7 +130,8 @@ namespace Jelly
                 await SendNotFoundAsync();
                 return;
             }
-
+            
+            LogService.AddLog($"Album Entity { Album.AlbumName } Retrieved");
             await SendAsync(Album);
         }
     }
@@ -154,7 +159,8 @@ namespace Jelly
                 await SendNotFoundAsync();
                 return;
             }
-
+            
+            LogService.AddLog($"Artist Entity { Artist.ArtistName } Retrieved");
             await SendAsync(Artist);
         }
     }
@@ -188,7 +194,7 @@ namespace Jelly
 
             var contentType = "image/jpeg";
     
-            //var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            LogService.AddLog($"Image { decodedUrl } Retrieved");
             await SendFileAsync(fileInfo, contentType);
         }
     }
@@ -254,7 +260,8 @@ namespace Jelly
 
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             stream.Seek(request.Start, SeekOrigin.Begin);
-    
+            
+            LogService.AddLog($"Audio { decodedUrl } Retrieved ({ request.Start } - { request.End })");
             await stream.CopyToAsync(HttpContext.Response.Body, (int)chunkSize, token);
         }
     }
